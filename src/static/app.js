@@ -20,11 +20,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
+        // Create participants list HTML
+        const participantsHTML = details.participants && details.participants.length > 0
+          ? `<div class="participants-section">
+               <h5>👥 Participants (${details.participants.length}/${details.max_participants}):</h5>
+               <ul class="participants-list">
+                 ${details.participants.map(email => `<li>${email}</li>`).join('')}
+               </ul>
+             </div>`
+          : `<div class="participants-section">
+               <h5>👥 Participants (0/${details.max_participants}):</h5>
+               <p class="no-participants">No participants yet. Be the first to sign up!</p>
+             </div>`;
+
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          ${participantsHTML}
         `;
 
         activitiesList.appendChild(activityCard);
@@ -73,6 +87,9 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         messageDiv.classList.add("hidden");
       }, 5000);
+
+      // Refresh activities list after successful signup
+      await fetchActivities();
     } catch (error) {
       messageDiv.textContent = "Failed to sign up. Please try again.";
       messageDiv.className = "error";
