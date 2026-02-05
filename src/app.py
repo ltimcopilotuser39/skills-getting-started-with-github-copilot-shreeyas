@@ -38,6 +38,12 @@ activities = {
         "schedule": "Mondays, Wednesdays, Fridays, 2:00 PM - 3:00 PM",
         "max_participants": 30,
         "participants": ["john@mergington.edu", "olivia@mergington.edu"]
+    },
+    "Basketball Club": {
+        "description": "Join the school basketball team and compete in matches",
+        "schedule": "Mondays and Wednesdays, 4:00 PM - 6:00 PM",
+        "max_participants": 15,
+        "participants": ["alex@mergington.edu", "sarah@mergington.edu"]
     }
 }
 
@@ -56,6 +62,10 @@ def get_activities():
 def signup_for_activity(activity_name: str, email: str):
     """Sign up a student for an activity"""
     # Validate activity exists
+    # Validate student is not already signed up for the activity
+    # Validate student is not already signed up
+    if email in activities.get(activity_name, {}).get("participants", []):
+        raise HTTPException(status_code=400, detail="Student already signed up for this activity")
     if activity_name not in activities:
         raise HTTPException(status_code=404, detail="Activity not found")
 
